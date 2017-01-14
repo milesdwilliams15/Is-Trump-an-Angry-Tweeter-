@@ -9,7 +9,7 @@ The proposed multi-level analysis that I outline below is not especially novel, 
 This method, though arguably methodologically consistent and sound, does also present a number of (surmountable) challenges, which will be covered in more detail later. However, even in the face of these challenges, I hope this brief outline will show the usefulness of this two-stage approach.
 
 ## The data
-Trump's tweets were scraped using a public API, by [Dr. Ryan Burge](https://github.com/ryanburge). The data is a subset of a much larger dataset that also includes the tweets of 88 evangelical leaders (data that Dr. Burge and I have recently used for research for an article I coauthored with him that we hope to have published later this year).
+For this analysis, I used a dataset of Donald Trump's tweets. Trump's tweets were scraped using a public API, by [Dr. Ryan Burge](https://github.com/ryanburge). The data is a subset of a much larger dataset that also includes the tweets of 88 evangelical leaders (data that Dr. Burge and I have recently used for research for an article I coauthored with him that we hope to have published later this year).
 
 The frequency of Trump's tweets during the period sampled is dipslayed below:
 
@@ -27,9 +27,9 @@ The frequency of Trump's tweets during the period sampled is dipslayed below:
 Although the greatest number of tweets in a given day appear more toward the first half of the sample period, Trump appears to have increased his total frequency of tweets closer to the end of the period sampled (perhaps because the November 8 election was approaching?).
 
 ## Sentiment analysis
-Sentiment analysis with the get_nrc_sentiment() in the syuzhet package is used to identify the positive and negative sentiment, as well as the presence of 8 emotions identified using the NRC Emotion Lexicon, in Donald Trump's tweets.
+Sentiment analysis with the get_nrc_sentiment() function in the syuzhet package is used to identify the positive and negative sentiment, as well as the presence of 8 emotions identified using the NRC Emotion Lexicon, in Donald Trump's tweets.
 
-eMake sure the text is a vector of character strings:
+Make sure the text is a vector of character strings:
 
     trumptweets$text <- as.character(trumptweets$text)
     
