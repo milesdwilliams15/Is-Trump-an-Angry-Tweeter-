@@ -341,7 +341,7 @@ The first topic I'll discuss is topic 15, which I have heuristically identified 
 
 The stm package will let us plot some of the top tweets associated with this topic so that we can put these lists of words into context:
 
-    thoughts<-findThoughts(tweetsmodel, tweets2$text, topics=15, n=6)$docs[[1]]
+     thoughts<-findThoughts(tweetsmodel, tweets2$text, topics=15, n=6)$docs[[1]]
     par(adj=0.5)
     plotQuote(thoughts,width=75)
     title(main="Example Tweets",adj=0)
@@ -391,4 +391,4 @@ And it's easy to see that when Trump talks about Hillary, he uses a significant 
 ![topic 12 point estimates](https://cloud.githubusercontent.com/assets/23504082/21958210/99f2ba96-da6e-11e6-9341-aaacb26d368c.jpg)
 
 ## Challenges and value of the two-stage method
-It has been pointed out by some that dictionary methods, as well as unsupervised machine learning algorithims, may miss important contextual factors associated with text that only humans could reliably identify. Some have proposed using human computation methods akin to Amazon's Mechanical Turk (AMT) in preference to purely computerized methods. However, some place a great deal of emphasis on the computerized element of text analysis and fail to recognize that the human research is meant to be partnered with machine in these sorts of analyses; not replaced by the machine. A critical component of this analysis is the human element, which is required to determine the meaning and themes of topics identified, as well as the overall performance of the model. This is still a challenge, however, because we are often left to rely on the judgments of only one person. But, this challenge could be overcome if more researchers are involved in a project such as this, which would ensure that judgments made about results are more reliable.
+It has been pointed out by some that dictionary methods, as well as unsupervised machine learning algorithims, may miss important contextual factors associated with text that only humans could reliably identify. Some have proposed using human computation methods akin to Amazon's Mechanical Turk (AMT) in preference to purely computerized methods. However, some place a great deal of emphasis on the computerized element of text analysis and fail to recognize that the human researcher is meant to be partnered with machine in these sorts of analyses; not replaced by the machine. A critical component of this analysis is the human element, which is required to determine the meaning and themes of topics identified, as well as the overall performance of the model. This is still a challenge, however, because we are often left to rely on the judgments of only one person. But, this challenge could be overcome if more researchers are involved in a project such as this, which would ensure that judgments made about results are more reliable (in theory anyway).
