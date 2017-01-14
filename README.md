@@ -294,7 +294,6 @@ Let's also compare the change in the approximate objective by iterations and loo
 As already stated, model 2 has been selected for further analysis. To keep things brief (I know, this has been a very long, brief analysis already), I'll go straight into some basic analysis with topic names already heuristically identified (I'll save discussion for how I deterimined topic themes for a later time).
 
 Below is a plot of expected topic proportions in Trump's tweets:
-![topic 15 point estimates](https://cloud.githubusercontent.com/assets/23504082/21958174/149e7e30-da6d-11e6-9c53-42fa75e40c18.jpg)
 
     topicNames<-c("Topic 1: Rallies",
               "Topic 2: Self-Funding of Campaign",
