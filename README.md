@@ -1,3 +1,5 @@
+[Back to Main Page](https://milesdwilliams15.github.io/)
+
 # Is Trump an Angry Tweeter?
 A Multi-level Sentiment and Structural Topic Model Analysis of Donald Trump's Tweets
 
@@ -392,3 +394,5 @@ And it's easy to see that when Trump talks about Hillary, he uses a significant 
 
 ## Challenges and value of the two-stage method
 It has been pointed out by some that dictionary methods, as well as unsupervised machine learning algorithims, may miss important contextual factors associated with text that only humans could reliably identify. Some have proposed using human computation methods akin to Amazon's Mechanical Turk (AMT) in preference to purely computerized methods. However, some place a great deal of emphasis on the computerized element of text analysis and fail to recognize that the human researcher is meant to be partnered with machine in these sorts of analyses; not replaced by the machine. A critical component of this analysis is the human element, which is required to determine the meaning and themes of topics identified, as well as the overall performance of the model. This is still a challenge, however, because we are often left to rely on the judgments of only one person. But, this challenge could be overcome if more researchers are involved in a project such as this, which would ensure that judgments made about results are more reliable (in theory anyway).
+
+[Back to Main Page](https://milesdwilliams15.github.io/)
