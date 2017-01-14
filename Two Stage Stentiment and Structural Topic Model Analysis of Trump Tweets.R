@@ -1,6 +1,5 @@
 
-#Sentiment analysis of political tweets
-install.packages("syuzhet")
+### Sentiment analysis of the Donald's tweets
 library(syuzhet)
 library(ggplot2)
 library(ggstance)
@@ -22,8 +21,9 @@ trumptweets$created<-as.POSIXct(trumptweets$created)
 # Make identifiers for whether tweets have been retweeted and favorited.
 trumptweets$retweeted<-Recode(trumptweets$retweetCount,"0='FALSE';else='TRUE'")
 trumptweets$favorited<-Recode(trumptweets$favoriteCount,"0='FALSE';else='TRUE'")
-trumptweets$text <- as.character(trumptweets$text)
 
+
+trumptweets$text <- as.character(trumptweets$text)
 # Do sentiment analysis using the NRC Emotion Lexicon:
 trumpSentiment <- get_nrc_sentiment(trumptweets$text)
 
@@ -41,7 +41,7 @@ e3<-ggplot(data = sentimentTotals3[1:8,], aes(x = reorder(sentiment,count), y = 
   geom_bar(aes(fill = sentiment), stat = "identity") + coord_flip() +
   theme_classic() +
   theme(legend.position = "none") +
-  xlab("") + ylab("") + ggtitle("",
+t  xlab("") + ylab("") + ggtitle("",
                                                         subtitle="Emotions in Donald Trump's Tweets") +
   geom_text(aes(label=sentiment), hjust=1.1,vjust=.001, colour="white",family="serif") +
   theme(plot.subtitle=element_text(size=10, hjust=0, face="italic", color="black")) +
@@ -51,7 +51,7 @@ e3<-ggplot(data = sentimentTotals3[1:8,], aes(x = reorder(sentiment,count), y = 
   theme(axis.title.y=element_blank(),
         axis.text.y=element_blank(),
         axis.ticks.y=element_blank()) +
-  theme(panel.grid.major.x=element_line(colour="grey50",linetype=3)) 
+i  theme(panel.grid.major.x=element_line(colour="grey50",linetype=3)) 
 
 s3<-ggplot(data = sentimentTotals3[9:10,], aes(x = reorder(sentiment,count), y = count)) +
   geom_bar(aes(fill = sentiment), stat = "identity") + coord_flip() +
@@ -80,17 +80,37 @@ tweets2$sentiment[tweets2$valence > 0] <- "positive"
 tweets2$sentiment[tweets2$valence < 0] <- "negative"
 tweets2$sentiment[tweets2$valence == 0] <- "neutral"
 
+# Process the text data for estimation of a structural topic model
 prostweets<-textProcessor(documents=tweets2$text,
                           metadata=data.frame(tweets2$created,tweets2$sentiment))
-  # Convergence in 274 EM iterations
-  # 340.53 seconds
+
+# Run 20 models, the top 20% of which with the highest likelihoods will be
+# run until convergence is reached.
 tweetsSelect <- selectModel(prostweets$documents, prostweets$vocab, K = 20,
                               prevalence=~tweets2.created + tweets2.sentiment,max.em.its=500,
                               data = prostweets$meta, runs = 20, seed = 8458159)
+# Some specs from the top 4 models estimated:
+tweetsSelect$runout[[1]]$convergence$bound
+# 300 iterations
+# 484.46 sec.
+# Final Bound: -82677.99
+tweetsSelect$runout[[2]]$convergence$bound
+# 403 iterations
+# 623.58 sec.
+# Final Bound: -82064.40
+tweetsSelect$runout[[3]]$convergence$bound
+# 229 iterations
+# 358.79 sec.
+# Final Bound: -82602.25
+tweetsSelect$runout[[4]]$convergence$bound
+# 336 iterations
+# 523.7 sec.
+# Final Bound: -82966.55
+
+## Plot the performance of each model to compare:
 # plotModels() doesn't give you any flexibility to determine where the legend for the 
-# Semantic Coherence/Exclusivity plot. Let's alter that function and create a new one
-# called plotModels2() that gives us the ability to specify the legend parameters
-# following plotting:
+# Semantic Coherence/Exclusivity plot goes. Let's alter that function and create a new one
+# called plotModels2() that gives us the ability to specify the legend parameters:
 plotModels2<-function (models, xlab = "Semantic Coherence", ylab = "Exclusivity", 
                        labels = 1:length(models$runout),printlegend = T, ...) 
 {
@@ -127,22 +147,6 @@ legend("bottomleft",legend=c("1","2","3","4"), # Print your own legend that
 title(main="Top 4 Models with the Highest Likelihoods after 20 Runs",family="serif",adj=0)
 mtext("Semantic Coherence and Exclusivity of Topics",font=3,adj=0)
 
-tweetsSelect$runout[[1]]$convergence$bound
-# 300
-# 484.46 sec.
-# Final Bound: -82677.99
-tweetsSelect$runout[[2]]$convergence$bound
-# 403
-# 623.58 sec.
-# Final Bound: -82064.40
-tweetsSelect$runout[[3]]$convergence$bound
-# 229
-# 358.79 sec.
-# Final Bound: -82602.25
-tweetsSelect$runout[[4]]$convergence$bound
-# 336 its
-# 523.7 sec.
-# Final Bound: -82966.55
 par(new=FALSE)
 par(family="serif",adj=.5)
 plot(tweetsSelect$runout[[1]]$convergence$bound, type = "l",
@@ -515,76 +519,6 @@ tweets_words2 <- tweets_words2  %>% bind_tf_idf(word,sentiment, n) %>%
 library(ggplot2)
 library(ggstance)
 library(ggthemes)
-ggplot(tweets_words2 %>% filter(`as.character(anger)`== "4") %>% top_n(5), aes(tf_idf, reorder(word,tf_idf), fill = "red")) +
-  geom_barh(stat = "identity", show.legend = FALSE) + theme_classic() +
-  ggtitle("Top tf-idf Words",subtitle = "Anger Score = 4") +
-  ylab("") + xlab("tf-idf") +
-  geom_text(aes(label=word), hjust=1.1,vjust=.001, colour="white",family="serif") +
-  scale_x_continuous(expand=c(0,0)) +
-  theme(strip.text=element_text(hjust=0)) +
-  theme(text=element_text(family="serif")) +
-  theme(plot.subtitle=element_text(size=10, hjust=0, face="italic", color="black")) +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank()) +
-  theme(panel.grid.major.x=element_line(colour="grey50",linetype=3))
-
-ggplot(tweets_words2 %>% filter(`as.character(anger)`== "3") %>% top_n(5), aes(tf_idf, reorder(word,tf_idf), fill = "red")) +
-  geom_barh(stat = "identity", show.legend = FALSE) + theme_classic() +
-  ggtitle("Top tf-idf Words",subtitle = "Anger Score = 3") +
-  ylab("") + xlab("tf-idf") +
-  geom_text(aes(label=word), hjust=1.1,vjust=.001, colour="white",family="serif") +
-  scale_x_continuous(expand=c(0,0)) +
-  theme(strip.text=element_text(hjust=0)) +
-  theme(text=element_text(family="serif")) +
-  theme(plot.subtitle=element_text(size=10, hjust=0, face="italic", color="black")) +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank()) +
-  theme(panel.grid.major.x=element_line(colour="grey50",linetype=3))
-
-ggplot(tweets_words2 %>% filter(`as.character(anger)`== "2") %>% top_n(5), aes(tf_idf, reorder(word,tf_idf), fill = "red")) +
-  geom_barh(stat = "identity", show.legend = FALSE) + theme_classic() +
-  ggtitle("Top tf-idf Words",subtitle = "Anger Score = 2") +
-  ylab("") + xlab("tf-idf") +
-  geom_text(aes(label=word), hjust=1.1,vjust=.001, colour="white",family="serif") +
-  scale_x_continuous(expand=c(0,0)) +
-  theme(strip.text=element_text(hjust=0)) +
-  theme(text=element_text(family="serif")) +
-  theme(plot.subtitle=element_text(size=10, hjust=0, face="italic", color="black")) +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank()) +
-  theme(panel.grid.major.x=element_line(colour="grey50",linetype=3))
-
-ggplot(tweets_words2 %>% filter(`as.character(anger)`== "1") %>% top_n(5), aes(tf_idf, reorder(word,tf_idf), fill = "red")) +
-  geom_barh(stat = "identity", show.legend = FALSE) + theme_classic() +
-  ggtitle("Top tf-idf Words",subtitle = "Anger Score = 4") +
-  ylab("") + xlab("tf-idf") +
-  geom_text(aes(label=word), hjust=1.1,vjust=.001, colour="white",family="serif") +
-  scale_x_continuous(expand=c(0,0)) +
-  theme(strip.text=element_text(hjust=0)) +
-  theme(text=element_text(family="serif")) +
-  theme(plot.subtitle=element_text(size=10, hjust=0, face="italic", color="black")) +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank()) +
-  theme(panel.grid.major.x=element_line(colour="grey50",linetype=3))
-
-ggplot(tweets_words2[1:20,], aes(tf_idf, reorder(word,tf_idf), fill = sentiment)) +
-  geom_barh(stat = "identity", show.legend = FALSE) + theme_classic() +
-  ggtitle("Top tf-idf Words",subtitle = "By Sentiment") +
-  ylab("") + xlab("tf-idf") +
-  geom_text(aes(label=word), hjust=1.1,vjust=.001, colour="white",family="serif") +
-  scale_x_continuous(expand=c(0,0)) +
-  theme(legend.position = "none") +
-  theme(strip.text=element_text(hjust=0)) +
-  theme(text=element_text(family="serif")) +
-  theme(plot.subtitle=element_text(size=10, hjust=0, face="italic", color="black")) +
-  theme(axis.title.y=element_blank(),
-        axis.text.y=element_blank(),
-        axis.ticks.y=element_blank()) +
-  theme(panel.grid.major.x=element_line(colour="grey50",linetype=3))
 
 tweets_words2Pos<-tweets_words2%>%filter(sentiment=="positive")
 ggplot(tweets_words2Pos[1:10,], aes(tf_idf, reorder(word,tf_idf),alpha=tf_idf)) +
